@@ -1,0 +1,265 @@
+---
+title: "Same Bog Afterall:Border Discontinuity Study of Pennine Towns on the Greater Manchester Derbyshire Border"
+author: "Sviatoslav"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+"treatment group" at a glance:
+
+```{r}
+library(tidyverse)
+library(gratia)
+library(mgcv)
+library(AICcmodavg)
+gmppanel_prop <- read_csv("C:/Users/alexa/Downloads/gmppanel_prop.csv")
+gmppanel_prop
+high_peak_areas <- c(
+  "New Mills West Ward",
+  "New Mills East Ward",
+  "Buxton Central Ward",
+  "Dinting Ward",
+  "Old Glossop Ward",
+  "Hadfield South Ward",
+  "Hadfield North Ward"
+)
+```
+
+*"Over there: horror! Derbyshire! People get stuck in bogs, and they like it."*\
+*"On this side: Greater Manchester! Civilization! People get stuck in bogs, and they don't like it."-A certain Slovenian Philosopher*
+
+*"I talk about doing for the rest of the country, what I have tried to do for Greater Manchester – Manchester-ism as we call it"Andy Burnham*
+
+## Motivation
+
+For about 4 years i have been crossing the Manchester Derbyshire border in places like Saddleworth and Glossop without even knowing. Well apperently that entailed crossing the border between two completely different socieconomic stories in England, on one side is a great revival spurred on by the dynamic metropolitan area, on the other rural stagnation. A vision of Britain through time generously provide access to data compilations of national surveys from ONS and the like including the 10 year ones used for this study. Border Discontinuity design is an old if weird tradition in econometrics, where we attempt to mimic an experimental design by studying individuals or communities on different sides of an exogenously set boundary(in this case the administrative border) to eliminate selection bias and study the exact effect of policy of interest by proxy of being on different sides of the boundary. In our case we try and determine whether being on different sides of the GMA/derbyshire border meaningfully affected socioeconomic makeup of towns that are otherwise physically and socially extremely close together in survey years 1971,1981,1991,2001,2011 and 2021. The effect estimates will capture any effect unique to being administratively included in the manchester metropolitan area or indicate lack thereof, which may or may not provide extra evidence on whether manchesterism spills over to the pennines
+
+**Methodology**
+
+Instead of cutting through degrees of freedom like Nick Clegg through social spending we use 2 Generalised Additive Models to represent
+
+theory 1 No divergence between GMP and derbyshire towns
+
+$$
+\text{Proportion}_{i} 
+= \beta_{0} 
++ \sum_{j=1}^{J} \gamma_{j} \, \mathbf{1}\{\text{Location}_{i} = j\}
++ s(\text{Year}_{i})
++ \varepsilon_{i},
+\qquad \varepsilon_{i} \sim \mathcal{N}(0, \sigma^{2}).
+$$
+
+Where s(Year) corresponds to base(k) 3 penalised smooth trend spline and y is town fixed effect
+
+theory 2 Divergent unique non linear trends between the two towns
+
+$$
+\text{Proportion}_{i} 
+= \beta_{0} 
++ \sum_{j=1}^{J} \gamma_{j} \, \mathbf{1}\{\text{Location}_{i} = j\}
++ s_{0}(\text{Year}_{i}) \, \mathbf{1}\{\text{treatment}_{i}=0\}
++ s_{1}(\text{Year}_{i}) \, \mathbf{1}\{\text{treatment}_{i}=1\}
++ \varepsilon_{i}.
+$$
+
+Where treatment 1 is the unique derbyshire trend and treatment 0 is the unique GMA trend
+
+To measure divergence directly we also estimate a difference of smooths showing divergence between GMA and derby shire towns
+
+d(Year)=s0(Year)−s1(Year).
+
+For inference we adopt an evidentilist approach where Akaike scores and Relative Likelihoods correspond to odds of the model being the best predictive approximation and Schwarz scores and BF correspond to approximate posterior odds and evidence in favour of either of the theories given that true model is included and both are assumed equally likely before observing any data. the inverse of RL and BF conversely represents relative support for the other model.
+
+**Unemployment**
+
+```{r echo=FALSE}
+gmppanel_prop <- read_csv("C:/Users/alexa/Downloads/gmppanel_prop.csv")
+gmppanel_prop
+high_peak_areas <- c(
+  "New Mills West Ward",
+  "New Mills East Ward",
+  "Buxton Central Ward",
+  "Dinting Ward",
+  "Old Glossop Ward",
+  "Hadfield South Ward",
+  "Hadfield North Ward"
+)
+unemployed <- na.omit(filter(gmppanel_prop,Classification=="Never worked & long-term unemployed"))
+unemployed <- unemployed %>% 
+  filter(!(Location %in% c("Tameside District","High Peak District")),Year>=1971) %>% 
+  mutate(treatment = factor(ifelse(Location %in%high_peak_areas, 1, 0)),
+         established = ifelse(Year>=2011,1,0),
+         did= established*treatment)
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(Location)))+geom_line()+ggtitle(unique(unemployed$Classification))
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+stat_summary(
+  fun.data = "mean_cl_boot", lwd=1,geom = "line"
+)+ggtitle(unique(unemployed$Classification))
+spline1 <- gam(
+  Proportion ~                        # Smooth trend for Reference Group (reduced k)
+    s(Year, by = treatment, k = 3) + # Difference spline (reduced k)
+    factor(Location),          # Location fixed effects
+  data = unemployed,
+  method = "ML"
+)
+anova(spline1)
+spliner <- gam(
+  Proportion ~            # Parametric intercept difference
+    s(Year, k = 3) +           # Smooth trend for Reference Group (reduced k)
+    factor(Location),          # Location fixed effects
+  data = unemployed,
+  method = "ML"
+)
+model_comparisontable =tibble(SIC=c(BIC(spliner),BIC(spline1)),
+                              Akaike=c(AICc(spliner),
+                                       AICc(spline1)))
+model_comparisontable = model_comparisontable %>% mutate(,ChangeSchwarz=SIC-min(SIC),ChangeAkaike=Akaike-min(Akaike),RL=exp(-0.5*(ChangeAkaike)),BF=(exp(-0.5*(ChangeSchwarz))))
+gt::gt(model_comparisontable)
+diff_fit <- difference_smooths(spline1, smooth = "s(Year)")
+
+# Plot the difference curve across time
+draw(diff_fit) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(title = "Smooth Difference (Derbyshire-GManchester)")
+```
+
+Assuming that the true plausible model is in our theory set the data supports the no divergence model with an evidence ratio of 41 to 1 which is strong evidence in favour of no divergence between Unemployed proportions on either side of the border. Even if we drop the true theory assumption the no divergence model is still 34 times more likely to be the best approximation to DGP in our candidate set. The predicted difference in smooths between either side of the border is about + 1.25 percent in 1991 and 2001 and -1 percent in 2021 between in favour of derbyshire. Derbyshire side had comparatively more predicted unemployment pre covid and slightly less after covid, but the data overwhelmingly suggests that these differentials are noise and favours the no difference model.
+
+**Intermediate Jobs**
+
+```{r echo=FALSE}
+unemployed <- na.omit(filter(gmppanel_prop,Classification=="Intermediate occupations"))
+unemployed <- unemployed %>% 
+  filter(Location != "Tameside District",Year>=1971) %>% 
+  mutate(treatment = factor(ifelse(Location == "High Peak District", 1, 0)),
+         established = ifelse(Year>=2011,1,0),
+         did= established*treatment)
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(Location)))+geom_line()+ggtitle(unique(unemployed$Classification))
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+geom_smooth(,se=FALSE,span=0.7)+ggtitle(unique(unemployed$Classification))
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+stat_summary(
+  fun.data = "mean_cl_boot", lwd=1,geom = "line"
+)+ggtitle(unique(unemployed$Classification))
+spline1 <- gam(
+  Proportion ~                       # Smooth trend for Reference Group (reduced k)
+    s(Year, by = treatment, k = 3) + # Difference spline (reduced k)
+    factor(Location),          # Location fixed effects
+  data = unemployed,
+  method = "ML"
+)
+anova(spline1)
+spliner <- gam(
+  Proportion ~            # Parametric intercept difference
+    s(Year, k = 3) +           # Smooth trend for Reference Group (reduced k)
+    factor(Location),          # Location fixed effects
+  data = unemployed,
+  method = "ML"
+)
+model_comparisontable =tibble(SIC=c(BIC(spliner),BIC(spline1)),
+                              Akaike=c(AICc(spliner),
+                                       AICc(spline1)))
+model_comparisontable = model_comparisontable %>% mutate(,ChangeSchwarz=SIC-min(SIC),ChangeAkaike=Akaike-min(Akaike),RL=exp(-0.5*(ChangeAkaike)),BF=(exp(-0.5*(ChangeSchwarz))))
+gt::gt(model_comparisontable)
+diff_fit <- difference_smooths(spline1, smooth = "s(Year)")
+
+# Plot the difference curve across time
+draw(diff_fit) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(title = "Smooth Difference (Derbyshire - GManchester)")
+```
+
+The posterior odds are that no divergence in intermediate jobs is 43.48 times more likely to be the more plausible model than the model with divergence. Its also 29 times more likely to be the best approximation. The predicted difference in proportion of those in intermediate jobs is about 1 percent at the period start which is still practically not that meaningful . Once again there doesn't seem to be much support to meaningful divergence in inermidiate jobs that could be attributed to the border division.
+
+**Routine and Manual Jobs**
+
+```{r echo=FALSE}
+unemployed <- na.omit(filter(gmppanel_prop,Classification=="Routine & manual occupations" ))
+unemployed <- unemployed %>% 
+  filter(Location != "Tameside District",Year>=1971) %>% 
+  mutate(treatment = factor(ifelse(Location == "High Peak District", 1, 0)),
+         established = ifelse(Year>=2011,1,0),
+         did= established*treatment)
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(Location)))+geom_line()+ggtitle(unique(unemployed$Classification))
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+geom_smooth(,se=FALSE,span=0.7)+ggtitle(unique(unemployed$Classification))
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+stat_summary(
+  fun.data = "mean_cl_boot", lwd=1,geom = "line"
+)+ggtitle(unique(unemployed$Classification))
+spline1 <- gam(
+  Proportion ~                       # Smooth trend for Reference Group (reduced k)
+    s(Year, by = treatment, k = 3) + # Difference spline (reduced k)
+    factor(Location),          # Location fixed effects
+  data = unemployed,
+  method = "ML"
+)
+anova(spline1)
+spliner <- gam(
+  Proportion ~           # Parametric intercept difference
+    s(Year, k = 3) +           # Smooth trend for Reference Group (reduced k)
+    factor(Location),          # Location fixed effects
+  data = unemployed,
+  method = "ML"
+)
+model_comparisontable =tibble(SIC=c(BIC(spliner),BIC(spline1)),
+                              Akaike=c(AICc(spliner),
+                                       AICc(spline1)))
+model_comparisontable = model_comparisontable %>% mutate(,ChangeSchwarz=SIC-min(SIC),ChangeAkaike=Akaike-min(Akaike),RL=exp(-0.5*(ChangeAkaike)),BF=(exp(-0.5*(ChangeSchwarz))))
+gt::gt(model_comparisontable)
+diff_fit <- difference_smooths(spline1, smooth = "s(Year)")
+
+# Plot the difference curve across time
+draw(diff_fit) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(title = "Smooth Difference (Derbyshire - GManchester)")
+```
+
+In years 1991 and 2001 Derbyshire towns are predicted to have about 1 percent more people employed in routine and manual employment. Still the model with divergence is 7.6 times less likely to be the best approximation and has 10 times lower posterior evidence support than the model with no divergence. Once again there's modest support for the null whether or not one follows Akaike or Schwarz.
+
+**Higher Administrative and Managerial Jobs**
+
+```{r echo=FALSE}
+unemployed <- na.omit(filter(gmppanel_prop,Classification=="Higher managerial, administrative & professional occupations" ))
+unemployed <- unemployed %>% 
+  filter(Location != "Tameside District",Year>=1971) %>% 
+  mutate(treatment = factor(ifelse(Location == "High Peak District", 1, 0)),
+         established = ifelse(Year>=2011,1,0),
+         did= established*treatment)
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(Location)))+geom_line()+ggtitle(unique(unemployed$Classification))
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+geom_smooth(,se=FALSE,span=0.7)+ggtitle(unique(unemployed$Classification))
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+stat_summary(
+  fun.data = "mean_cl_boot", lwd=1,geom = "line"
+)+ggtitle(unique(unemployed$Classification))
+spline1 <- gam(
+  Proportion ~                        # Smooth trend for Reference Group (reduced k)
+    s(Year, by = treatment, k = 3) + # Difference spline (reduced k)
+    factor(Location),          # Location fixed effects
+  data = unemployed,
+  method = "ML"
+)
+anova(spline1)
+spliner <- gam(
+  Proportion ~             # Parametric intercept difference
+    s(Year, k = 3) +           # Smooth trend for Reference Group (reduced k)
+    factor(Location),          # Location fixed effects
+  data = unemployed,
+  method = "ML"
+)
+model_comparisontable =tibble(SIC=c(BIC(spliner),BIC(spline1)),
+                              Akaike=c(AICc(spliner),
+                                       AICc(spline1)))
+model_comparisontable = model_comparisontable %>% mutate(,ChangeSchwarz=SIC-min(SIC),ChangeAkaike=Akaike-min(Akaike),RL=exp(-0.5*(ChangeAkaike)),BF=(exp(-0.5*(ChangeSchwarz))))
+gt::gt(model_comparisontable)
+diff_fit <- difference_smooths(spline1, smooth = "s(Year)")
+
+# Plot the difference curve across time
+draw(diff_fit) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(title = "Smooth Difference (Derbyshire - GManchester)")
+```
+
+The divergence model in administrative employment is similiarly 24 times less likely to be the best approximation and 36 times less likely to be the true posterior model
+
+MEH,
+
+The exploratory evidence seems to point to no divergence in trends that could be attributable to the administrative border. The evidence ratio sizes are large enough to conclude that the local evidence favours the simpler no divergence model far and beyond what would be considered inconclusive or modest evidence on Jeffreys scale. Maybe Manchesterism doesn't spillover afterall
