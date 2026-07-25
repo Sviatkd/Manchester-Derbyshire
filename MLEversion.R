@@ -1,10 +1,6 @@
 library(tidyverse)
 library(gratia)
 library(mgcv)
-gmppanel_prop <- ns_socioeconomic_classification %>%
-  group_by(Area, Year) %>%
-  mutate(Proportion = Count / sum(Count, na.rm = TRUE),Area=Location) %>%
-  ungroup()
 gmppanel_prop <- read_csv("C:/Users/alexa/Downloads/gmppanel_prop.csv")
 gmppanel_prop
 high_peak_areas <- c(
