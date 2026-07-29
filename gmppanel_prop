@@ -1,0 +1,349 @@
+"","Location","Year","Classification","Count","Proportion"
+"1","Tameside District",1841,"Higher managerial, administrative & professional occupations",2503,0.0721034741026675
+"2","Tameside District",1841,"Intermediate occupations",12488,0.359739586334044
+"3","Tameside District",1841,"Routine & manual occupations",19723,0.568156939563289
+"4","Tameside District",1841,"Never worked & long-term unemployed",NA,NA
+"5","Tameside District",1881,"Higher managerial, administrative & professional occupations",12534,0.0852856122205967
+"6","Tameside District",1881,"Intermediate occupations",53665,0.365154968870139
+"7","Tameside District",1881,"Routine & manual occupations",80766,0.549559418909264
+"8","Tameside District",1881,"Never worked & long-term unemployed",NA,NA
+"9","Tameside District",1931,"Higher managerial, administrative & professional occupations",11605,0.106794150938187
+"10","Tameside District",1931,"Intermediate occupations",61009,0.561430793157076
+"11","Tameside District",1931,"Routine & manual occupations",36053,0.331775055904736
+"12","Tameside District",1931,"Never worked & long-term unemployed",NA,NA
+"13","Tameside District",1971,"Higher managerial, administrative & professional occupations",4139,0.323006087092243
+"14","Tameside District",1971,"Intermediate occupations",3937,0.30724207897612
+"15","Tameside District",1971,"Routine & manual occupations",3769,0.29413141876073
+"16","Tameside District",1971,"Never worked & long-term unemployed",969,0.0756204151709068
+"17","Tameside District",1981,"Higher managerial, administrative & professional occupations",4471,0.347397047397047
+"18","Tameside District",1981,"Intermediate occupations",3807,0.295804195804196
+"19","Tameside District",1981,"Routine & manual occupations",3611,0.280574980574981
+"20","Tameside District",1981,"Never worked & long-term unemployed",981,0.0762237762237762
+"21","Tameside District",1991,"Higher managerial, administrative & professional occupations",4714,0.461252446183953
+"22","Tameside District",1991,"Intermediate occupations",2631,0.257436399217221
+"23","Tameside District",1991,"Routine & manual occupations",2738,0.267906066536204
+"24","Tameside District",1991,"Never worked & long-term unemployed",137,0.0134050880626223
+"25","Tameside District",2001,"Higher managerial, administrative & professional occupations",31973,0.25697430498067
+"26","Tameside District",2001,"Intermediate occupations",26079,0.209602880542674
+"27","Tameside District",2001,"Routine & manual occupations",53515,0.430112280081337
+"28","Tameside District",2001,"Never worked & long-term unemployed",12854,0.103310534395319
+"29","Tameside District",2011,"Higher managerial, administrative & professional occupations",66880,0.353010725445486
+"30","Tameside District",2011,"Intermediate occupations",37896,0.200025335697998
+"31","Tameside District",2011,"Routine & manual occupations",64224,0.338991639219661
+"32","Tameside District",2011,"Never worked & long-term unemployed",20456,0.107972299636855
+"33","Tameside District",2021,"Higher managerial, administrative & professional occupations",49390,0.26684748253524
+"34","Tameside District",2021,"Intermediate occupations",42304,0.22856278398807
+"35","Tameside District",2021,"Routine & manual occupations",63932,0.345415939531139
+"36","Tameside District",2021,"Never worked & long-term unemployed",29461,0.15917379394555
+"37","High Peak District",1841,"Higher managerial, administrative & professional occupations",2522,0.131142426290885
+"38","High Peak District",1841,"Intermediate occupations",9364,0.486922156934117
+"39","High Peak District",1841,"Routine & manual occupations",7345,0.381935416774999
+"40","High Peak District",1841,"Never worked & long-term unemployed",NA,NA
+"41","High Peak District",1881,"Higher managerial, administrative & professional occupations",6220,0.126571975092589
+"42","High Peak District",1881,"Intermediate occupations",16196,0.329575515852021
+"43","High Peak District",1881,"Routine & manual occupations",26726,0.543852509055391
+"44","High Peak District",1881,"Never worked & long-term unemployed",NA,NA
+"45","High Peak District",1931,"Higher managerial, administrative & professional occupations",5509,0.147646869639794
+"46","High Peak District",1931,"Intermediate occupations",20553,0.550841552315609
+"47","High Peak District",1931,"Routine & manual occupations",11250,0.301511578044597
+"48","High Peak District",1931,"Never worked & long-term unemployed",NA,NA
+"49","High Peak District",1971,"Higher managerial, administrative & professional occupations",1508,0.336832700469064
+"50","High Peak District",1971,"Intermediate occupations",1252,0.279651552378825
+"51","High Peak District",1971,"Routine & manual occupations",1126,0.251507706053161
+"52","High Peak District",1971,"Never worked & long-term unemployed",591,0.13200804109895
+"53","High Peak District",1981,"Higher managerial, administrative & professional occupations",1813,0.393531582374647
+"54","High Peak District",1981,"Intermediate occupations",1220,0.264814412850011
+"55","High Peak District",1981,"Routine & manual occupations",1206,0.26177555893206
+"56","High Peak District",1981,"Never worked & long-term unemployed",368,0.079878445843282
+"57","High Peak District",1991,"Higher managerial, administrative & professional occupations",2179,0.519923645907898
+"58","High Peak District",1991,"Intermediate occupations",844,0.201383917919351
+"59","High Peak District",1991,"Routine & manual occupations",1093,0.260796945836316
+"60","High Peak District",1991,"Never worked & long-term unemployed",75,0.0178954903364352
+"61","High Peak District",2001,"Higher managerial, administrative & professional occupations",18407,0.343017405240207
+"62","High Peak District",2001,"Intermediate occupations",10938,0.203831389064888
+"63","High Peak District",2001,"Routine & manual occupations",19757,0.368174872349148
+"64","High Peak District",2001,"Never worked & long-term unemployed",4560,0.0849763333457568
+"65","High Peak District",2011,"Higher managerial, administrative & professional occupations",36991,0.450439589878473
+"66","High Peak District",2011,"Intermediate occupations",15421,0.187781593239327
+"67","High Peak District",2011,"Routine & manual occupations",22716,0.276612844304815
+"68","High Peak District",2011,"Never worked & long-term unemployed",6994,0.0851659725773849
+"69","High Peak District",2021,"Higher managerial, administrative & professional occupations",26997,0.356735114564338
+"70","High Peak District",2021,"Intermediate occupations",17117,0.226181981553424
+"71","High Peak District",2021,"Routine & manual occupations",23469,0.31011654642036
+"72","High Peak District",2021,"Never worked & long-term unemployed",8095,0.106966357461878
+"73","Saddleworth South Ward",1971,"Higher managerial, administrative & professional occupations",250,0.525210084033613
+"74","Saddleworth South Ward",1971,"Intermediate occupations",107,0.224789915966387
+"75","Saddleworth South Ward",1971,"Routine & manual occupations",67,0.140756302521008
+"76","Saddleworth South Ward",1971,"Never worked & long-term unemployed",52,0.109243697478992
+"77","Saddleworth South Ward",1981,"Higher managerial, administrative & professional occupations",301,0.600798403193613
+"78","Saddleworth South Ward",1981,"Intermediate occupations",98,0.19560878243513
+"79","Saddleworth South Ward",1981,"Routine & manual occupations",71,0.141716566866267
+"80","Saddleworth South Ward",1981,"Never worked & long-term unemployed",31,0.06187624750499
+"81","Saddleworth South Ward",1991,"Higher managerial, administrative & professional occupations",311,0.724941724941725
+"82","Saddleworth South Ward",1991,"Intermediate occupations",55,0.128205128205128
+"83","Saddleworth South Ward",1991,"Routine & manual occupations",55,0.128205128205128
+"84","Saddleworth South Ward",1991,"Never worked & long-term unemployed",8,0.0186480186480186
+"85","Saddleworth South Ward",2001,"Higher managerial, administrative & professional occupations",2599,0.460570618465355
+"86","Saddleworth South Ward",2001,"Intermediate occupations",1313,0.232677653730285
+"87","Saddleworth South Ward",2001,"Routine & manual occupations",1245,0.220627325890484
+"88","Saddleworth South Ward",2001,"Never worked & long-term unemployed",486,0.0861244019138756
+"89","Saddleworth South Ward",2011,"Higher managerial, administrative & professional occupations",5468,0.575578947368421
+"90","Saddleworth South Ward",2011,"Intermediate occupations",1891,0.199052631578947
+"91","Saddleworth South Ward",2011,"Routine & manual occupations",1533,0.161368421052632
+"92","Saddleworth South Ward",2011,"Never worked & long-term unemployed",608,0.064
+"93","Saddleworth South Ward",2021,"Higher managerial, administrative & professional occupations",3882,0.461812990720914
+"94","Saddleworth South Ward",2021,"Intermediate occupations",2069,0.2461337140138
+"95","Saddleworth South Ward",2021,"Routine & manual occupations",1589,0.189031644063764
+"96","Saddleworth South Ward",2021,"Never worked & long-term unemployed",866,0.103021651201523
+"97","Marple North Ward",1971,"Higher managerial, administrative & professional occupations",363,0.578025477707006
+"98","Marple North Ward",1971,"Intermediate occupations",107,0.170382165605096
+"99","Marple North Ward",1971,"Routine & manual occupations",86,0.136942675159236
+"100","Marple North Ward",1971,"Never worked & long-term unemployed",72,0.114649681528662
+"101","Marple North Ward",1981,"Higher managerial, administrative & professional occupations",446,0.677811550151976
+"102","Marple North Ward",1981,"Intermediate occupations",87,0.132218844984802
+"103","Marple North Ward",1981,"Routine & manual occupations",93,0.141337386018237
+"104","Marple North Ward",1981,"Never worked & long-term unemployed",32,0.0486322188449848
+"105","Marple North Ward",1991,"Higher managerial, administrative & professional occupations",484,0.752721617418352
+"106","Marple North Ward",1991,"Intermediate occupations",80,0.124416796267496
+"107","Marple North Ward",1991,"Routine & manual occupations",66,0.102643856920684
+"108","Marple North Ward",1991,"Never worked & long-term unemployed",13,0.0202177293934681
+"109","Marple North Ward",2001,"Higher managerial, administrative & professional occupations",3673,0.486168100595632
+"110","Marple North Ward",2001,"Intermediate occupations",1805,0.238914626075447
+"111","Marple North Ward",2001,"Routine & manual occupations",1421,0.188087359364659
+"112","Marple North Ward",2001,"Never worked & long-term unemployed",656,0.0868299139642621
+"113","Marple North Ward",2011,"Higher managerial, administrative & professional occupations",6804,0.597575970490075
+"114","Marple North Ward",2011,"Intermediate occupations",2203,0.193483225013174
+"115","Marple North Ward",2011,"Routine & manual occupations",1597,0.140259968382224
+"116","Marple North Ward",2011,"Never worked & long-term unemployed",782,0.0686808361145266
+"117","Marple North Ward",2021,"Higher managerial, administrative & professional occupations",5253,0.511938407562616
+"118","Marple North Ward",2021,"Intermediate occupations",2395,0.233408049897671
+"119","Marple North Ward",2021,"Routine & manual occupations",1709,0.166552967547023
+"120","Marple North Ward",2021,"Never worked & long-term unemployed",904,0.0881005749926908
+"121","Marple South and High Lane Ward",1971,"Higher managerial, administrative & professional occupations",368,0.502732240437158
+"122","Marple South and High Lane Ward",1971,"Intermediate occupations",153,0.209016393442623
+"123","Marple South and High Lane Ward",1971,"Routine & manual occupations",121,0.165300546448087
+"124","Marple South and High Lane Ward",1971,"Never worked & long-term unemployed",90,0.122950819672131
+"125","Marple South and High Lane Ward",1981,"Higher managerial, administrative & professional occupations",470,0.59720457433291
+"126","Marple South and High Lane Ward",1981,"Intermediate occupations",149,0.189326556543837
+"127","Marple South and High Lane Ward",1981,"Routine & manual occupations",133,0.168996188055909
+"128","Marple South and High Lane Ward",1981,"Never worked & long-term unemployed",35,0.0444726810673443
+"129","Marple South and High Lane Ward",1991,"Higher managerial, administrative & professional occupations",419,0.647604327666152
+"130","Marple South and High Lane Ward",1991,"Intermediate occupations",105,0.162287480680062
+"131","Marple South and High Lane Ward",1991,"Routine & manual occupations",115,0.17774343122102
+"132","Marple South and High Lane Ward",1991,"Never worked & long-term unemployed",8,0.0123647604327666
+"133","Marple South and High Lane Ward",2001,"Higher managerial, administrative & professional occupations",2696,0.406820582465671
+"134","Marple South and High Lane Ward",2001,"Intermediate occupations",1586,0.239323977667119
+"135","Marple South and High Lane Ward",2001,"Routine & manual occupations",1837,0.277199336049494
+"136","Marple South and High Lane Ward",2001,"Never worked & long-term unemployed",508,0.0766561038177154
+"137","Marple South and High Lane Ward",2011,"Higher managerial, administrative & professional occupations",5169,0.508559622195986
+"138","Marple South and High Lane Ward",2011,"Intermediate occupations",2249,0.221271153089335
+"139","Marple South and High Lane Ward",2011,"Routine & manual occupations",2043,0.201003541912633
+"140","Marple South and High Lane Ward",2011,"Never worked & long-term unemployed",703,0.0691656828020464
+"141","Marple South and High Lane Ward",2021,"Higher managerial, administrative & professional occupations",4107,0.411193432118542
+"142","Marple South and High Lane Ward",2021,"Intermediate occupations",2559,0.256207448938726
+"143","Marple South and High Lane Ward",2021,"Routine & manual occupations",2270,0.227272727272727
+"144","Marple South and High Lane Ward",2021,"Never worked & long-term unemployed",1052,0.105326391670004
+"145","Saddleworth North Ward",1971,"Higher managerial, administrative & professional occupations",203,0.409274193548387
+"146","Saddleworth North Ward",1971,"Intermediate occupations",128,0.258064516129032
+"147","Saddleworth North Ward",1971,"Routine & manual occupations",113,0.227822580645161
+"148","Saddleworth North Ward",1971,"Never worked & long-term unemployed",52,0.104838709677419
+"149","Saddleworth North Ward",1981,"Higher managerial, administrative & professional occupations",273,0.507434944237918
+"150","Saddleworth North Ward",1981,"Intermediate occupations",110,0.204460966542751
+"151","Saddleworth North Ward",1981,"Routine & manual occupations",118,0.219330855018587
+"152","Saddleworth North Ward",1981,"Never worked & long-term unemployed",37,0.0687732342007435
+"153","Saddleworth North Ward",1991,"Higher managerial, administrative & professional occupations",303,0.62603305785124
+"154","Saddleworth North Ward",1991,"Intermediate occupations",75,0.15495867768595
+"155","Saddleworth North Ward",1991,"Routine & manual occupations",96,0.198347107438017
+"156","Saddleworth North Ward",1991,"Never worked & long-term unemployed",10,0.0206611570247934
+"157","Saddleworth North Ward",2001,"Higher managerial, administrative & professional occupations",2769,0.462811298679592
+"158","Saddleworth North Ward",2001,"Intermediate occupations",1362,0.227644994150092
+"159","Saddleworth North Ward",2001,"Routine & manual occupations",1398,0.233662042453619
+"160","Saddleworth North Ward",2001,"Never worked & long-term unemployed",454,0.0758816647166973
+"161","Saddleworth North Ward",2011,"Higher managerial, administrative & professional occupations",5274,0.559575596816976
+"162","Saddleworth North Ward",2011,"Intermediate occupations",1917,0.203395225464191
+"163","Saddleworth North Ward",2011,"Routine & manual occupations",1661,0.176233421750663
+"164","Saddleworth North Ward",2011,"Never worked & long-term unemployed",573,0.0607957559681698
+"165","Saddleworth North Ward",2021,"Higher managerial, administrative & professional occupations",3656,0.443527841805168
+"166","Saddleworth North Ward",2021,"Intermediate occupations",2123,0.257551862186097
+"167","Saddleworth North Ward",2021,"Routine & manual occupations",1617,0.196166444255732
+"168","Saddleworth North Ward",2021,"Never worked & long-term unemployed",847,0.102753851753003
+"169","New Mills West Ward",1971,"Higher managerial, administrative & professional occupations",92,0.423963133640553
+"170","New Mills West Ward",1981,"Higher managerial, administrative & professional occupations",100,0.431034482758621
+"171","New Mills West Ward",1991,"Higher managerial, administrative & professional occupations",127,0.579908675799087
+"172","New Mills West Ward",2001,"Higher managerial, administrative & professional occupations",992,0.376899696048632
+"173","New Mills West Ward",2011,"Higher managerial, administrative & professional occupations",2114,0.509152215799615
+"174","New Mills West Ward",2021,"Higher managerial, administrative & professional occupations",1457,0.412981859410431
+"175","New Mills East Ward",1971,"Higher managerial, administrative & professional occupations",60,0.253164556962025
+"176","New Mills East Ward",1981,"Higher managerial, administrative & professional occupations",53,0.270408163265306
+"177","New Mills East Ward",1991,"Higher managerial, administrative & professional occupations",64,0.374269005847953
+"178","New Mills East Ward",2001,"Higher managerial, administrative & professional occupations",516,0.228217602830606
+"179","New Mills East Ward",2011,"Higher managerial, administrative & professional occupations",1158,0.346395453185761
+"180","New Mills East Ward",2021,"Higher managerial, administrative & professional occupations",928,0.279939668174962
+"181","Buxton Central Ward",1971,"Higher managerial, administrative & professional occupations",71,0.31981981981982
+"182","Buxton Central Ward",1981,"Higher managerial, administrative & professional occupations",61,0.396103896103896
+"183","Buxton Central Ward",1991,"Higher managerial, administrative & professional occupations",60,0.397350993377483
+"184","Buxton Central Ward",2001,"Higher managerial, administrative & professional occupations",769,0.332324978392394
+"185","Buxton Central Ward",2011,"Higher managerial, administrative & professional occupations",1478,0.386304234187141
+"186","Buxton Central Ward",2021,"Higher managerial, administrative & professional occupations",967,0.305143578415904
+"187","Dinting Ward",1971,"Higher managerial, administrative & professional occupations",66,0.55
+"188","Dinting Ward",1981,"Higher managerial, administrative & professional occupations",80,0.506329113924051
+"189","Dinting Ward",1991,"Higher managerial, administrative & professional occupations",101,0.701388888888889
+"190","Dinting Ward",2001,"Higher managerial, administrative & professional occupations",610,0.475077881619938
+"191","Dinting Ward",2011,"Higher managerial, administrative & professional occupations",1091,0.580010632642212
+"192","Dinting Ward",2021,"Higher managerial, administrative & professional occupations",1012,0.502233250620347
+"193","Old Glossop Ward",1971,"Higher managerial, administrative & professional occupations",23,0.291139240506329
+"194","Old Glossop Ward",1981,"Higher managerial, administrative & professional occupations",39,0.314516129032258
+"195","Old Glossop Ward",1991,"Higher managerial, administrative & professional occupations",122,0.638743455497382
+"196","Old Glossop Ward",2001,"Higher managerial, administrative & professional occupations",1000,0.436871996505024
+"197","Old Glossop Ward",2011,"Higher managerial, administrative & professional occupations",2320,0.546396608572774
+"198","Old Glossop Ward",2021,"Higher managerial, administrative & professional occupations",1644,0.437699680511182
+"199","Hadfield South Ward",1971,"Higher managerial, administrative & professional occupations",85,0.358649789029536
+"200","Hadfield South Ward",1981,"Higher managerial, administrative & professional occupations",94,0.46078431372549
+"201","Hadfield South Ward",1991,"Higher managerial, administrative & professional occupations",115,0.477178423236515
+"202","Hadfield South Ward",2001,"Higher managerial, administrative & professional occupations",956,0.341550553769203
+"203","Hadfield South Ward",2011,"Higher managerial, administrative & professional occupations",1673,0.430187708922602
+"204","Hadfield South Ward",2021,"Higher managerial, administrative & professional occupations",1163,0.340157940918397
+"205","Hadfield North Ward",1971,"Higher managerial, administrative & professional occupations",37,0.258741258741259
+"206","Hadfield North Ward",1981,"Higher managerial, administrative & professional occupations",46,0.302631578947368
+"207","Hadfield North Ward",1991,"Higher managerial, administrative & professional occupations",56,0.513761467889908
+"208","Hadfield North Ward",2001,"Higher managerial, administrative & professional occupations",363,0.268491124260355
+"209","Hadfield North Ward",2011,"Higher managerial, administrative & professional occupations",749,0.364122508507535
+"210","Hadfield North Ward",2021,"Higher managerial, administrative & professional occupations",513,0.27
+"211","Tameside District",1931,"Higher managerial, administrative & professional occupations",11605,0.106794150938187
+"212","High Peak District",1981,"Higher managerial, administrative & professional occupations",1813,0.393531582374647
+"213","Saddleworth South Ward",2021,"Higher managerial, administrative & professional occupations",3882,0.461812990720914
+"214","New Mills West Ward",1971,"Intermediate occupations",50,0.230414746543779
+"215","New Mills West Ward",1981,"Intermediate occupations",65,0.280172413793103
+"216","New Mills West Ward",1991,"Intermediate occupations",35,0.159817351598174
+"217","New Mills West Ward",2001,"Intermediate occupations",558,0.212006079027356
+"218","New Mills West Ward",2011,"Intermediate occupations",777,0.187138728323699
+"219","New Mills West Ward",2021,"Intermediate occupations",820,0.232426303854875
+"220","New Mills East Ward",1971,"Intermediate occupations",79,0.333333333333333
+"221","New Mills East Ward",1981,"Intermediate occupations",63,0.321428571428571
+"222","New Mills East Ward",1991,"Intermediate occupations",37,0.216374269005848
+"223","New Mills East Ward",2001,"Intermediate occupations",424,0.187527642636002
+"224","New Mills East Ward",2011,"Intermediate occupations",568,0.169907268920132
+"225","New Mills East Ward",2021,"Intermediate occupations",641,0.193363499245852
+"226","Buxton Central Ward",1971,"Intermediate occupations",58,0.261261261261261
+"227","Buxton Central Ward",1981,"Intermediate occupations",39,0.253246753246753
+"228","Buxton Central Ward",1991,"Intermediate occupations",41,0.271523178807947
+"229","Buxton Central Ward",2001,"Intermediate occupations",441,0.190579083837511
+"230","Buxton Central Ward",2011,"Intermediate occupations",548,0.143230527966545
+"231","Buxton Central Ward",2021,"Intermediate occupations",633,0.199747554433575
+"232","Dinting Ward",1971,"Intermediate occupations",25,0.208333333333333
+"233","Dinting Ward",1981,"Intermediate occupations",35,0.221518987341772
+"234","Dinting Ward",1991,"Intermediate occupations",22,0.152777777777778
+"235","Dinting Ward",2001,"Intermediate occupations",289,0.225077881619938
+"236","Dinting Ward",2011,"Intermediate occupations",379,0.201488569909623
+"237","Dinting Ward",2021,"Intermediate occupations",483,0.23970223325062
+"238","Old Glossop Ward",1971,"Intermediate occupations",27,0.341772151898734
+"239","Old Glossop Ward",1981,"Intermediate occupations",43,0.346774193548387
+"240","Old Glossop Ward",1991,"Intermediate occupations",31,0.162303664921466
+"241","Old Glossop Ward",2001,"Intermediate occupations",481,0.210135430318917
+"242","Old Glossop Ward",2011,"Intermediate occupations",792,0.186528497409326
+"243","Old Glossop Ward",2021,"Intermediate occupations",859,0.228700745473908
+"244","Hadfield South Ward",1971,"Intermediate occupations",68,0.286919831223629
+"245","Hadfield South Ward",1981,"Intermediate occupations",52,0.254901960784314
+"246","Hadfield South Ward",1991,"Intermediate occupations",63,0.261410788381743
+"247","Hadfield South Ward",2001,"Intermediate occupations",565,0.201857806359414
+"248","Hadfield South Ward",2011,"Intermediate occupations",741,0.190537413216765
+"249","Hadfield South Ward",2021,"Intermediate occupations",819,0.239543726235741
+"250","Hadfield North Ward",1971,"Intermediate occupations",43,0.300699300699301
+"251","Hadfield North Ward",1981,"Intermediate occupations",41,0.269736842105263
+"252","Hadfield North Ward",1991,"Intermediate occupations",22,0.201834862385321
+"253","Hadfield North Ward",2001,"Intermediate occupations",266,0.196745562130178
+"254","Hadfield North Ward",2011,"Intermediate occupations",405,0.196888672824502
+"255","Hadfield North Ward",2021,"Intermediate occupations",437,0.23
+"256","Tameside District",1881,"Intermediate occupations",53665,0.365154968870139
+"257","High Peak District",1991,"Intermediate occupations",844,0.201383917919351
+"258","High Peak District",2001,"Intermediate occupations",10938,0.203831389064888
+"259","High Peak District",2011,"Intermediate occupations",15421,0.187781593239327
+"260","Saddleworth South Ward",2021,"Intermediate occupations",2069,0.2461337140138
+"261","New Mills West Ward",1971,"Routine & manual occupations",53,0.244239631336406
+"262","New Mills West Ward",1981,"Routine & manual occupations",57,0.245689655172414
+"263","New Mills West Ward",1991,"Routine & manual occupations",55,0.251141552511416
+"264","New Mills West Ward",2001,"Routine & manual occupations",882,0.335106382978723
+"265","New Mills West Ward",2011,"Routine & manual occupations",975,0.234826589595376
+"266","New Mills West Ward",2021,"Routine & manual occupations",987,0.279761904761905
+"267","New Mills East Ward",1971,"Routine & manual occupations",63,0.265822784810127
+"268","New Mills East Ward",1981,"Routine & manual occupations",69,0.352040816326531
+"269","New Mills East Ward",1991,"Routine & manual occupations",70,0.409356725146199
+"270","New Mills East Ward",2001,"Routine & manual occupations",1118,0.494471472799646
+"271","New Mills East Ward",2011,"Routine & manual occupations",1284,0.384086150164523
+"272","New Mills East Ward",2021,"Routine & manual occupations",1346,0.406033182503771
+"273","Buxton Central Ward",1971,"Routine & manual occupations",64,0.288288288288288
+"274","Buxton Central Ward",1981,"Routine & manual occupations",46,0.298701298701299
+"275","Buxton Central Ward",1991,"Routine & manual occupations",47,0.311258278145695
+"276","Buxton Central Ward",2001,"Routine & manual occupations",897,0.387640449438202
+"277","Buxton Central Ward",2011,"Routine & manual occupations",1111,0.290381599581809
+"278","Buxton Central Ward",2021,"Routine & manual occupations",1121,0.353739349952666
+"279","Dinting Ward",1971,"Routine & manual occupations",16,0.133333333333333
+"280","Dinting Ward",1981,"Routine & manual occupations",34,0.215189873417722
+"281","Dinting Ward",1991,"Routine & manual occupations",19,0.131944444444444
+"282","Dinting Ward",2001,"Routine & manual occupations",286,0.222741433021807
+"283","Dinting Ward",2011,"Routine & manual occupations",297,0.157894736842105
+"284","Dinting Ward",2021,"Routine & manual occupations",352,0.17468982630273
+"285","Old Glossop Ward",1971,"Routine & manual occupations",20,0.253164556962025
+"286","Old Glossop Ward",1981,"Routine & manual occupations",35,0.282258064516129
+"287","Old Glossop Ward",1991,"Routine & manual occupations",36,0.18848167539267
+"288","Old Glossop Ward",2001,"Routine & manual occupations",616,0.269113149847095
+"289","Old Glossop Ward",2011,"Routine & manual occupations",820,0.193122939236929
+"290","Old Glossop Ward",2021,"Routine & manual occupations",891,0.237220447284345
+"291","Hadfield South Ward",1971,"Routine & manual occupations",58,0.244725738396624
+"292","Hadfield South Ward",1981,"Routine & manual occupations",47,0.230392156862745
+"293","Hadfield South Ward",1991,"Routine & manual occupations",61,0.253112033195021
+"294","Hadfield South Ward",2001,"Routine & manual occupations",1037,0.370489460521615
+"295","Hadfield South Ward",2011,"Routine & manual occupations",1144,0.294163023913602
+"296","Hadfield South Ward",2021,"Routine & manual occupations",1057,0.309154723603393
+"297","Hadfield North Ward",1971,"Routine & manual occupations",42,0.293706293706294
+"298","Hadfield North Ward",1981,"Routine & manual occupations",55,0.361842105263158
+"299","Hadfield North Ward",1991,"Routine & manual occupations",30,0.275229357798165
+"300","Hadfield North Ward",2001,"Routine & manual occupations",565,0.417899408284024
+"301","Hadfield North Ward",2011,"Routine & manual occupations",671,0.32620320855615
+"302","Hadfield North Ward",2021,"Routine & manual occupations",677,0.356315789473684
+"303","High Peak District",2001,"Routine & manual occupations",19757,0.368174872349148
+"304","Saddleworth South Ward",2001,"Routine & manual occupations",1245,0.220627325890484
+"305","New Mills West Ward",1971,"Never worked & long-term unemployed",22,0.101382488479263
+"306","New Mills West Ward",1981,"Never worked & long-term unemployed",10,0.0431034482758621
+"307","New Mills West Ward",1991,"Never worked & long-term unemployed",2,0.0091324200913242
+"308","New Mills West Ward",2001,"Never worked & long-term unemployed",200,0.0759878419452888
+"309","New Mills West Ward",2011,"Never worked & long-term unemployed",286,0.0688824662813102
+"310","New Mills West Ward",2021,"Never worked & long-term unemployed",264,0.0748299319727891
+"311","New Mills East Ward",1971,"Never worked & long-term unemployed",35,0.147679324894515
+"312","New Mills East Ward",1981,"Never worked & long-term unemployed",11,0.0561224489795918
+"313","New Mills East Ward",1991,"Never worked & long-term unemployed",0,0
+"314","New Mills East Ward",2001,"Never worked & long-term unemployed",203,0.0897832817337461
+"315","New Mills East Ward",2011,"Never worked & long-term unemployed",333,0.0996111277295842
+"316","New Mills East Ward",2021,"Never worked & long-term unemployed",400,0.120663650075415
+"317","Buxton Central Ward",1971,"Never worked & long-term unemployed",29,0.130630630630631
+"318","Buxton Central Ward",1981,"Never worked & long-term unemployed",8,0.051948051948052
+"319","Buxton Central Ward",1991,"Never worked & long-term unemployed",3,0.0198675496688742
+"320","Buxton Central Ward",2001,"Never worked & long-term unemployed",207,0.0894554883318928
+"321","Buxton Central Ward",2011,"Never worked & long-term unemployed",689,0.180083638264506
+"322","Buxton Central Ward",2021,"Never worked & long-term unemployed",448,0.141369517197854
+"323","Dinting Ward",1971,"Never worked & long-term unemployed",13,0.108333333333333
+"324","Dinting Ward",1981,"Never worked & long-term unemployed",9,0.0569620253164557
+"325","Dinting Ward",1991,"Never worked & long-term unemployed",2,0.0138888888888889
+"326","Dinting Ward",2001,"Never worked & long-term unemployed",99,0.0771028037383178
+"327","Dinting Ward",2011,"Never worked & long-term unemployed",114,0.0606060606060606
+"328","Dinting Ward",2021,"Never worked & long-term unemployed",168,0.0833746898263027
+"329","Old Glossop Ward",1971,"Never worked & long-term unemployed",9,0.113924050632911
+"330","Old Glossop Ward",1981,"Never worked & long-term unemployed",7,0.0564516129032258
+"331","Old Glossop Ward",1991,"Never worked & long-term unemployed",2,0.0104712041884817
+"332","Old Glossop Ward",2001,"Never worked & long-term unemployed",192,0.0838794233289646
+"333","Old Glossop Ward",2011,"Never worked & long-term unemployed",314,0.0739519547809703
+"334","Old Glossop Ward",2021,"Never worked & long-term unemployed",362,0.0963791267305644
+"335","Hadfield South Ward",1971,"Never worked & long-term unemployed",26,0.109704641350211
+"336","Hadfield South Ward",1981,"Never worked & long-term unemployed",11,0.053921568627451
+"337","Hadfield South Ward",1991,"Never worked & long-term unemployed",2,0.00829875518672199
+"338","Hadfield South Ward",2001,"Never worked & long-term unemployed",241,0.0861021793497678
+"339","Hadfield South Ward",2011,"Never worked & long-term unemployed",331,0.0851118539470301
+"340","Hadfield South Ward",2021,"Never worked & long-term unemployed",380,0.111143609242469
+"341","Hadfield North Ward",1971,"Never worked & long-term unemployed",21,0.146853146853147
+"342","Hadfield North Ward",1981,"Never worked & long-term unemployed",10,0.0657894736842105
+"343","Hadfield North Ward",1991,"Never worked & long-term unemployed",1,0.0091743119266055
+"344","Hadfield North Ward",2001,"Never worked & long-term unemployed",158,0.116863905325444
+"345","Hadfield North Ward",2011,"Never worked & long-term unemployed",232,0.112785610111813
+"346","Hadfield North Ward",2021,"Never worked & long-term unemployed",273,0.143684210526316
+"347","High Peak District",2021,"Never worked & long-term unemployed",8095,0.106966357461878
+"348","Saddleworth South Ward",1991,"Never worked & long-term unemployed",8,0.0186480186480186

@@ -9,15 +9,20 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-"treatment group" at a glance:
-
-```{r}
+```{r include=FALSE}
 library(tidyverse)
 library(gratia)
 library(mgcv)
 library(AICcmodavg)
-gmppanel_prop <- read_csv("C:/Users/alexa/Downloads/gmppanel_prop.csv")
-gmppanel_prop
+library(gt)
+gmppanel <- read_csv("~/(No subject)/Courseworkstuff/New folder (2)/gmppanel.txt")
+gmppanel_prop1 <- gmppanel %>%
+  group_by(Location, Year) %>%
+  mutate(Proportion = Count / sum(Count, na.rm = TRUE)) %>%
+  ungroup()
+gmppanel_prop2 <- read_csv("C:/Users/alexa/Downloads/gmppanel_prop.csv")
+gmppanel_prop2=gmppanel_prop2[,-2]
+gmppanel_prop=full_join(gmppanel_prop1,gmppanel_prop2)
 high_peak_areas <- c(
   "New Mills West Ward",
   "New Mills East Ward",
@@ -27,6 +32,7 @@ high_peak_areas <- c(
   "Hadfield South Ward",
   "Hadfield North Ward"
 )
+write.csv(gmppanel_prop,"gmppanel_prop")
 ```
 
 *"Over there: horror! Derbyshire! People get stuck in bogs, and they like it."*\
@@ -72,40 +78,84 @@ To measure divergence directly we also estimate a difference of smooths showing 
 
 d(Year)=s0(Year)−s1(Year).
 
-For inference we adopt an evidentilist approach where Akaike scores and Relative Likelihoods correspond to odds of the model being the best predictive approximation and Schwarz scores and BF correspond to approximate posterior odds and evidence in favour of either of the theories given that true model is included and both are assumed equally likely before observing any data. the inverse of RL and BF conversely represents relative support for the other model.
+For inference we adopt an evidentilist approach where Akaike scores and Relative Likelihoods correspond to odds of the model being the best predictive approximation and Schwarz scores and BF correspond to approximate posterior odds and evidence in favour of either of the theories given that true model is included and both are assumed equally likely before observing any data. the inverse of RL and BF conversely represents relative support for the other model. Although default AIC is an exact approximation for large enough n its biased towards more complex models in low n scenarios like this one. Therefore corrected AIC(AICc) is used instead as it includes an exact correction for small sample size which dissipates and becomes equivalent to default AIC as ratio of parameters to n shrinks.Therefore arguably the relative likelihoods derived from AICc are more trustworthy in our case than the ones derived from the Schwarz criterion
+
+**Data Gathering**
+
+The data used here was parsed from screenshots taken of Britain Vision through Time website accessible through this link <https://www.visionofbritain.org.uk/unit/13505688/cube/NS_SEC_4WAY>.
 
 **Unemployment**
 
-```{r echo=FALSE}
-gmppanel_prop <- read_csv("C:/Users/alexa/Downloads/gmppanel_prop.csv")
-gmppanel_prop
-high_peak_areas <- c(
-  "New Mills West Ward",
-  "New Mills East Ward",
-  "Buxton Central Ward",
-  "Dinting Ward",
-  "Old Glossop Ward",
-  "Hadfield South Ward",
-  "Hadfield North Ward"
-)
+```{r echo=TRUE}
 unemployed <- na.omit(filter(gmppanel_prop,Classification=="Never worked & long-term unemployed"))
 unemployed <- unemployed %>% 
   filter(!(Location %in% c("Tameside District","High Peak District")),Year>=1971) %>% 
-  mutate(treatment = factor(ifelse(Location %in%high_peak_areas, 1, 0)),
-         established = ifelse(Year>=2011,1,0),
-         did= established*treatment)
+  mutate(highpeak = factor(ifelse(Location %in%high_peak_areas, 1, 0)))
 ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(Location)))+geom_line()+ggtitle(unique(unemployed$Classification))
-ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+stat_summary(
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = highpeak))+stat_summary(
   fun.data = "mean_cl_boot", lwd=1,geom = "line"
 )+ggtitle(unique(unemployed$Classification))
+```
+
+The visual evidence points to no divergence between unemployment trends in two groups until the 2001 survey wave.From then onwards in 2011 the gap in employment grew to be about 2 percent or a fourth of the rate in GM towns, it did not however persist for long with it shrinking to less than 1 percent in the 2021 wave.
+
+```{r}
 spline1 <- gam(
   Proportion ~                        # Smooth trend for Reference Group (reduced k)
-    s(Year, by = treatment, k = 3) + # Difference spline (reduced k)
+    s(Year, by = highpeak, k = 3) + # Difference spline (reduced k)
     factor(Location),          # Location fixed effects
   data = unemployed,
   method = "ML"
 )
-anova(spline1)
+spliner <- gam(
+  Proportion ~            # Parametric intercept difference
+    s(Year, k = 3) +           # Smooth trend for Reference Group (reduced k)
+    factor(Location),          # Location fixed effects
+  data = unemployed,
+  method = "ML" #Using ML so that information criteria are comparable acros smooths
+)
+model_comparisontable =tibble(SIC=c(BIC(spliner),BIC(spline1)),
+                              Akaike=c(AICc(spliner),
+                                       AICc(spline1))) #Using AICc to correct for small sample size
+model_comparisontable = model_comparisontable %>% mutate(,ChangeSchwarz=SIC-min(SIC),ChangeAkaike=Akaike-min(Akaike),RL=exp(-0.5*(ChangeAkaike)),BF=(exp(-0.5*(ChangeSchwarz))))
+cols_add(gt(model_comparisontable),theory=c("Single Pooled Trend","Two Different Trends"))
+```
+
+Assuming that the true plausible model is in our theory set  the model with no divergence is 1/0.022=46 times more likely to be the true model in the set which is strong evidence in favour of no divergence  on either side of the border. As a  robustness check against a small sample size and given that the true model may not in the set we can use the AICc scores to calculate relative(to number of parameters) likelihoods as well. The no divergence model is 1/0.048=20.7 times more likely to minimise information loss and be the better approximation to the Data Generating Process than the one with separate trends. We therefore have strong or moderately strong evidence that the data supports the no divergence theory for unemployment trends regardless of whether we are looking at posterior trends or predictive power.
+
+```{r}
+diff_fit <- difference_smooths(spline1, "s(Year)")
+# Plot the difference curve across time
+draw(diff_fit) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(title = "Smooth Difference (Derbyshire-GManchester)")
+
+```
+
+**Intermediate Jobs**
+
+```{r echo=FALSE}
+unemployed <- na.omit(filter(gmppanel_prop,Classification=="Intermediate occupations"))
+unemployed <- unemployed %>% 
+  filter(!(Location %in% c("Tameside District","High Peak District")),Year>=1971) %>% 
+  mutate(highpeak = factor(ifelse(Location %in%high_peak_areas, 1, 0)))
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(Location)))+geom_line()+ggtitle(unique(unemployed$Classification))
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = highpeak))+stat_summary(
+  fun.data = "mean_cl_boot", lwd=1,geom = "line"
+)+ggtitle(unique(unemployed$Classification))
+
+```
+
+There's much higher heterogeneity in who worked in intermidiate occupations compared to general unemployment trends.Old Glossop and New Mills are clear outliers in the timeline as they both had more than 33 percent of their population employed in intermediate Jobs as the start of the period but both crashed to near 17 percent in subsequent years.Marple on the Other hand saw the fraction of those working in intermediate occupations grow by almost 10 percent. This may or may not be problematic for higher level group analysis as differences might be driven by a few notable cases.Stil the two groups seem to have been on a similarish path till 2001 where the greater Manchester villages overtook the high peak counterparts and then retained a 2 percent gap in subsequent waves.
+
+```{r echo=FALSE}
+spline1 <- gam(
+  Proportion ~                        # Smooth trend for Reference Group (reduced k)
+    s(Year, by = highpeak, k = 3) + # Difference spline (reduced k)
+    factor(Location),          # Location fixed effects
+  data = unemployed,
+  method = "ML"
+)
 spliner <- gam(
   Proportion ~            # Parametric intercept difference
     s(Year, k = 3) +           # Smooth trend for Reference Group (reduced k)
@@ -117,8 +167,13 @@ model_comparisontable =tibble(SIC=c(BIC(spliner),BIC(spline1)),
                               Akaike=c(AICc(spliner),
                                        AICc(spline1)))
 model_comparisontable = model_comparisontable %>% mutate(,ChangeSchwarz=SIC-min(SIC),ChangeAkaike=Akaike-min(Akaike),RL=exp(-0.5*(ChangeAkaike)),BF=(exp(-0.5*(ChangeSchwarz))))
-gt::gt(model_comparisontable)
-diff_fit <- difference_smooths(spline1, smooth = "s(Year)")
+cols_add(gt(model_comparisontable),theory=c("Single Pooled Trend","Two Different Trends"))
+```
+
+The Schwarz approximate posterior odds are that the divergent trends model is 2.5 thousand times more likely to be the true model in the set. Similarly the separate trends model is 5000 times more likely to be the better predictive approximation than the single pooled trend model. The data heavily supports the divergent trends model or at least heavily favours it as the better predictive model.
+
+```{r echo=FALSE}
+diff_fit <- difference_smooths(spline1,"s(Year)")
 
 # Plot the difference curve across time
 draw(diff_fit) +
@@ -126,30 +181,31 @@ draw(diff_fit) +
   labs(title = "Smooth Difference (Derbyshire-GManchester)")
 ```
 
-Assuming that the true plausible model is in our theory set the data supports the no divergence model with an evidence ratio of 41 to 1 which is strong evidence in favour of no divergence between Unemployed proportions on either side of the border. Even if we drop the true theory assumption the no divergence model is still 34 times more likely to be the best approximation to DGP in our candidate set. The predicted difference in smooths between either side of the border is about + 1.25 percent in 1991 and 2001 and -1 percent in 2021 between in favour of derbyshire. Derbyshire side had comparatively more predicted unemployment pre covid and slightly less after covid, but the data overwhelmingly suggests that these differentials are noise and favours the no difference model.
+The predicted difference in smooths is negative before 1991 but positive afterwards. The model clearly suggests that the two groups were not moving in tandem with the gap between them changing before high peak villages got overtaken by greater Manchester villages. The results therefore may be hard to  attribute to the border effects alone(as we have seen in ward by ward plots)  or any particular policy date but suggest decisive  descriptive evidence of the fact that on average the towns on the greater Manchester side of the border became much more dominated by intermidiate occupations compared to those in high peak.
 
-**Intermediate Jobs**
+**Routine and Manual Jobs**
 
 ```{r echo=FALSE}
-unemployed <- na.omit(filter(gmppanel_prop,Classification=="Intermediate occupations"))
+unemployed <- na.omit(filter(gmppanel_prop,Classification=="Routine & manual occupations" ))
 unemployed <- unemployed %>% 
-  filter(Location != "Tameside District",Year>=1971) %>% 
-  mutate(treatment = factor(ifelse(Location == "High Peak District", 1, 0)),
-         established = ifelse(Year>=2011,1,0),
-         did= established*treatment)
+  filter(!(Location %in% c("Tameside District","High Peak District")),Year>=1971) %>% 
+  mutate(highpeak = factor(ifelse(Location %in%high_peak_areas, 1, 0)))
 ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(Location)))+geom_line()+ggtitle(unique(unemployed$Classification))
-ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+geom_smooth(,se=FALSE,span=0.7)+ggtitle(unique(unemployed$Classification))
-ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+stat_summary(
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = highpeak))+stat_summary(
   fun.data = "mean_cl_boot", lwd=1,geom = "line"
 )+ggtitle(unique(unemployed$Classification))
+```
+
+What saw much more continuity are routine and Manual Occupations. Although both groups are located in the Pennines the ones on the High Peak side started out with about 8 percent more people employed in these sorts of occupations be it construction work or more likely farm related  work. What is arguably more interesting is that the gap stayed relatively balanced across survey waves with the groups moving more or less in tandem.This might point to the fact that towns in the high peak group are nonetheless much deeper in the Peak District and it's Moors and thus have higher baseline structural propensity for this sector(something that fixed effects would account for).Still it's clear that the trends are not perfectly parallel.
+
+```{r echo=FALSE}
 spline1 <- gam(
-  Proportion ~                       # Smooth trend for Reference Group (reduced k)
-    s(Year, by = treatment, k = 3) + # Difference spline (reduced k)
+  Proportion ~                        # Smooth trend for Reference Group (reduced k)
+    s(Year, by = highpeak, k = 3) + # Difference spline (reduced k)
     factor(Location),          # Location fixed effects
   data = unemployed,
   method = "ML"
 )
-anova(spline1)
 spliner <- gam(
   Proportion ~            # Parametric intercept difference
     s(Year, k = 3) +           # Smooth trend for Reference Group (reduced k)
@@ -161,85 +217,48 @@ model_comparisontable =tibble(SIC=c(BIC(spliner),BIC(spline1)),
                               Akaike=c(AICc(spliner),
                                        AICc(spline1)))
 model_comparisontable = model_comparisontable %>% mutate(,ChangeSchwarz=SIC-min(SIC),ChangeAkaike=Akaike-min(Akaike),RL=exp(-0.5*(ChangeAkaike)),BF=(exp(-0.5*(ChangeSchwarz))))
-gt::gt(model_comparisontable)
-diff_fit <- difference_smooths(spline1, smooth = "s(Year)")
+cols_add(gt(model_comparisontable),theory=c("Single Pooled Trend","Two Different Trends"))
 
-# Plot the difference curve across time
-draw(diff_fit) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
-  labs(title = "Smooth Difference (Derbyshire - GManchester)")
 ```
 
-The posterior odds are that no divergence in intermediate jobs is 43.48 times more likely to be the more plausible model than the model with divergence. Its also 29 times more likely to be the best approximation. The predicted difference in proportion of those in intermediate jobs is about 1 percent at the period start which is still practically not that meaningful . Once again there doesn't seem to be much support to meaningful divergence in inermidiate jobs that could be attributed to the border division.
-
-**Routine and Manual Jobs**
+The evidence ratios reflect this higher uncertainty. The approximate Bayes factor in favour of the single trend model is 6 to 1 which constitutes weak evidence in favour of single trends as the divergence model still has some non negligible odds of being the true model. The information loss perspective is similiarly indecisive/weakly supportive of single trend model as the best approximation with it being 3.8 times more likely than the separate trends model to be the better approximation.At 26 percent probability of being the better model the 2 trends model still can't be disregarded.The sample evidence therefore offers relatively weak support for the single trend model regardless of whether one looks at posterior odds or choosing the best approximation.
 
 ```{r echo=FALSE}
-unemployed <- na.omit(filter(gmppanel_prop,Classification=="Routine & manual occupations" ))
-unemployed <- unemployed %>% 
-  filter(Location != "Tameside District",Year>=1971) %>% 
-  mutate(treatment = factor(ifelse(Location == "High Peak District", 1, 0)),
-         established = ifelse(Year>=2011,1,0),
-         did= established*treatment)
-ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(Location)))+geom_line()+ggtitle(unique(unemployed$Classification))
-ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+geom_smooth(,se=FALSE,span=0.7)+ggtitle(unique(unemployed$Classification))
-ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+stat_summary(
-  fun.data = "mean_cl_boot", lwd=1,geom = "line"
-)+ggtitle(unique(unemployed$Classification))
-spline1 <- gam(
-  Proportion ~                       # Smooth trend for Reference Group (reduced k)
-    s(Year, by = treatment, k = 3) + # Difference spline (reduced k)
-    factor(Location),          # Location fixed effects
-  data = unemployed,
-  method = "ML"
-)
-anova(spline1)
-spliner <- gam(
-  Proportion ~           # Parametric intercept difference
-    s(Year, k = 3) +           # Smooth trend for Reference Group (reduced k)
-    factor(Location),          # Location fixed effects
-  data = unemployed,
-  method = "ML"
-)
-model_comparisontable =tibble(SIC=c(BIC(spliner),BIC(spline1)),
-                              Akaike=c(AICc(spliner),
-                                       AICc(spline1)))
-model_comparisontable = model_comparisontable %>% mutate(,ChangeSchwarz=SIC-min(SIC),ChangeAkaike=Akaike-min(Akaike),RL=exp(-0.5*(ChangeAkaike)),BF=(exp(-0.5*(ChangeSchwarz))))
-gt::gt(model_comparisontable)
-diff_fit <- difference_smooths(spline1, smooth = "s(Year)")
+diff_fit <- difference_smooths(spline1, "s(Year)")
 
 # Plot the difference curve across time
 draw(diff_fit) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
-  labs(title = "Smooth Difference (Derbyshire - GManchester)")
+  labs(title = "Smooth Difference (Derbyshire-GManchester)")
 ```
 
-In years 1991 and 2001 Derbyshire towns are predicted to have about 1 percent more people employed in routine and manual employment. Still the model with divergence is 7.6 times less likely to be the best approximation and has 10 times lower posterior evidence support than the model with no divergence. Once again there's modest support for the null whether or not one follows Akaike or Schwarz.
+The smooth difference plots show very high uncertainty at the start and the end of the survey Overall although both approximate posterior odds and the relative likelihood evidential  approaches favour the model under which both groups have near parallel trends in those working in routine and Manual Occupations they arguably do not rule out the divergence model with enough certainty that we could argue that it's the theory conclusively supported by the data.In spite of clear visual evidence we only have weak in sample support for no significant divergence theory.Although only weakly supported by the data we have that the groups maintained their baseline differences in manual work patterns overtime.
 
 **Higher Administrative and Managerial Jobs**
 
 ```{r echo=FALSE}
 unemployed <- na.omit(filter(gmppanel_prop,Classification=="Higher managerial, administrative & professional occupations" ))
 unemployed <- unemployed %>% 
-  filter(Location != "Tameside District",Year>=1971) %>% 
-  mutate(treatment = factor(ifelse(Location == "High Peak District", 1, 0)),
-         established = ifelse(Year>=2011,1,0),
-         did= established*treatment)
+  filter(!(Location %in% c("Tameside District","High Peak District")),Year>=1971) %>% 
+  mutate(highpeak = factor(ifelse(Location %in%high_peak_areas, 1, 0)))
 ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(Location)))+geom_line()+ggtitle(unique(unemployed$Classification))
-ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+geom_smooth(,se=FALSE,span=0.7)+ggtitle(unique(unemployed$Classification))
-ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = factor(treatment)))+stat_summary(
+ggplot(data = unemployed,mapping = aes(x=Year,y=Proportion,colour = highpeak))+stat_summary(
   fun.data = "mean_cl_boot", lwd=1,geom = "line"
 )+ggtitle(unique(unemployed$Classification))
+```
+
+The story is flipped for high managerial/admin roles. Even in 1971 the GM towns already dominated their high peak counterparts by about 15 percent. Even if the plot suggests that the gap narrowed slightly.
+
+```{r echo=FALSE}
 spline1 <- gam(
   Proportion ~                        # Smooth trend for Reference Group (reduced k)
-    s(Year, by = treatment, k = 3) + # Difference spline (reduced k)
+    s(Year, by = highpeak, k = 3) + # Difference spline (reduced k)
     factor(Location),          # Location fixed effects
   data = unemployed,
   method = "ML"
 )
-anova(spline1)
 spliner <- gam(
-  Proportion ~             # Parametric intercept difference
+  Proportion ~            # Parametric intercept difference
     s(Year, k = 3) +           # Smooth trend for Reference Group (reduced k)
     factor(Location),          # Location fixed effects
   data = unemployed,
@@ -249,17 +268,18 @@ model_comparisontable =tibble(SIC=c(BIC(spliner),BIC(spline1)),
                               Akaike=c(AICc(spliner),
                                        AICc(spline1)))
 model_comparisontable = model_comparisontable %>% mutate(,ChangeSchwarz=SIC-min(SIC),ChangeAkaike=Akaike-min(Akaike),RL=exp(-0.5*(ChangeAkaike)),BF=(exp(-0.5*(ChangeSchwarz))))
-gt::gt(model_comparisontable)
-diff_fit <- difference_smooths(spline1, smooth = "s(Year)")
+cols_add(gt(model_comparisontable),theory=c("Single Pooled Trend","Two Different Trends"))
+```
+
+But did it really? The bayes factor in favour of the no divergence model by 11 to 1 which is moderately strong evidence. However if we drop the m closed assumption and use Relative Likelihoods derived from the more small n robust AICc the story is far less rosy with the 4.9 to 1 evidence for pooled trend model to be the best approximating model. Being.skeptical we follow the likelihoods efficient at small m and therefore have modest to anecdotal evidence in favour of the no divergence model as the best approximating model.We still can't fully rule out if the divergent model were a better fit.
+
+```{r echo=FALSE}
+diff_fit <- difference_smooths(spline1,"s(Year)")
 
 # Plot the difference curve across time
 draw(diff_fit) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
-  labs(title = "Smooth Difference (Derbyshire - GManchester)")
+  labs(title = "Smooth Difference (Derbyshire-GManchester)")
 ```
 
-The divergence model in administrative employment is similiarly 24 times less likely to be the best approximation and 36 times less likely to be the true posterior model
-
-MEH,
-
-The exploratory evidence seems to point to no divergence in trends that could be attributable to the administrative border. The evidence ratio sizes are large enough to conclude that the local evidence favours the simpler no divergence model far and beyond what would be considered inconclusive or modest evidence on Jeffreys scale. Maybe Manchesterism doesn't spillover afterall
+Like with manual jobs it's highly likely that the gap between the tol groups stayed more or less constant overtime as seen by confidence bands hugging and crossing zero. We cannot however rule out relatively small divergence between groups overtime that might still mean that the divergence theory is not dead in the water.
