@@ -1,8 +1,14 @@
 library(tidyverse)
 library(gratia)
 library(mgcv)
-gmppanel_prop <- read_csv("C:/Users/alexa/Downloads/gmppanel_prop.csv")
-gmppanel_prop
+gmppanel <- read_csv("~/(No subject)/Courseworkstuff/New folder (2)/gmppanel.txt")
+gmppanel_prop1 <- gmppanel %>%
+  group_by(Location, Year) %>%
+  mutate(Proportion = Count / sum(Count, na.rm = TRUE)) %>%
+  ungroup()
+gmppanel_prop2 <- read_csv("C:/Users/alexa/Downloads/gmppanel_prop.csv")
+gmppanel_prop2=gmppanel_prop2[,-2]
+gmppanel_prop=full_join(gmppanel_prop1,gmppanel_prop2)
 high_peak_areas <- c(
   "New Mills West Ward",
   "New Mills East Ward",
