@@ -35,10 +35,10 @@ high_peak_areas <- c(
 write.csv(gmppanel_prop,"gmppanel_prop")
 ```
 
-*"Over there: horror! Derbyshire! People get stuck in bogs, and they like it."*\
-*"On this side: Greater Manchester! Civilization! People get stuck in bogs, and they don't like it."-A certain Slovenian Philosopher*
+"Over there: horror! Derbyshire! People get stuck in bogs, and they like it."\
+"On this side: Greater Manchester! Civilization! People get stuck in bogs, and they don't like it."-A certain Slovenian Philosopher
 
-*"I talk about doing for the rest of the country, what I have tried to do for Greater Manchester – Manchester-ism as we call it"Andy Burnham*
+"I talk about doing for the rest of the country, what I have tried to do for Greater Manchester – Manchester-ism as we call it"Andy Burnham
 
 ## Motivation
 
@@ -78,9 +78,9 @@ To measure divergence directly we also estimate a difference of smooths showing 
 
 d(Year)=s0(Year)−s1(Year).
 
-For inference we adopt an evidentilist approach where Akaike scores and Relative Likelihoods correspond to odds of the model being the best predictive approximation and Schwarz scores and BF correspond to approximate posterior odds and evidence in favour of either of the theories given that true model is included and both are assumed equally likely before observing any data. the inverse of RL and BF conversely represents relative support for the other model. Although default AIC is an exact approximation for large enough n its biased towards more complex models in low n scenarios like this one. Therefore corrected AIC(AICc) is used instead as it includes an exact correction for small sample size which dissipates and becomes equivalent to default AIC as ratio of parameters to n shrinks.Therefore arguably the relative likelihoods derived from AICc are more trustworthy in our case than the ones derived from the Schwarz criterion
+For inference we adopt an evidentilist approach where Akaike scores and Relative Likelihoods correspond to odds of the model being the best predictive approximation and Schwarz scores and BF correspond to approximate posterior odds and evidence in favour of either of the theories given that the true or at least quasi true(plausible) model is included and all models are assumed equally likely before observing any data. the inverse of RL and BF conversely represents relative support for the other model. Although default AIC is an exact approximation for large enough n its biased towards more complex models in low n scenarios like this one. Therefore corrected AIC(AICc) is used instead as it includes an exact correction for small sample size which dissipates and becomes equivalent to default AIC as ratio of parameters to n shrinks.Therefore arguably the relative likelihoods derived from AICc are more trustworthy in our case than the ones derived from the Schwarz criterion.(For discussion on AICc vs BIC see appendix from Burnham and Anderson(2004).
 
-**Data Gathering**
+**Data Gatherin**
 
 The data used here was parsed from screenshots taken of Britain Vision through Time website accessible through this link <https://www.visionofbritain.org.uk/unit/13505688/cube/NS_SEC_4WAY>.
 
@@ -283,3 +283,30 @@ draw(diff_fit) +
 ```
 
 Like with manual jobs it's highly likely that the gap between the tol groups stayed more or less constant overtime as seen by confidence bands hugging and crossing zero. We cannot however rule out relatively small divergence between groups overtime that might still mean that the divergence theory is not dead in the water.
+
+Appendix
+
+"The model selection literature often errs by considering that
+AIC and BIC selection are directly comparable, as if they had the
+same objective target model. Their target models are different
+(Reschenhofer 1996). The target model of AIC is one that is specific
+for the sample size at hand: It is the fitted model that minimizes
+expected estimated K-L information loss when fitted model gr is used
+to approximate full reality, f. This target model changes with sample
+size. Moreover, in this overall philosophy, even the set of models is
+expected to be changed if there are large changes in n.
+Theclassica lderivation of BIC assumed that there was a true model,
+independent of n, that generated the data; it was a model in the model
+set, and this true model was the target model for selection by BIC.
+However, selection of this true model with probability 1 only occurs
+in the limit as n gets very large, and in taking that limit, the model
+set is kept fixed. The original derivation of BIC has been relaxed,
+wherein we realize that such convergence only justifies an inference
+of a quasi-true model (the most parsimonious model closest in K-L
+information to truth).
+
+From
+
+**Burnham, K.P. and Anderson, D.R.** **(2004) Multimodel Inference: Understanding**
+
+**AIC and BIC in Model Selection.** **Sociological Methods & Research, 33, 261-304**.
