@@ -1,0 +1,189 @@
+---
+title: "bayesstuff"
+author: "Sviatoslav"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+gmppanel <- read_csv("~/(No subject)/Courseworkstuff/New folder (2)/gmppanel.txt")
+gmppanel_prop1 <- gmppanel %>%
+  group_by(Location, Year) %>%
+  mutate(Proportion = Count / sum(Count, na.rm = TRUE)) %>%
+  ungroup()
+gmppanel_prop2 <- read_csv("C:/Users/alexa/Downloads/gmppanel_prop.csv")
+gmppanel_prop2=gmppanel_prop2[,-2]
+gmppanel_prop=full_join(gmppanel_prop1,gmppanel_prop2)
+high_peak_areas <- c(
+  "New Mills West Ward",
+  "New Mills East Ward",
+  "Buxton Central Ward",
+  "Dinting Ward",
+  "Old Glossop Ward",
+  "Hadfield South Ward",
+  "Hadfield North Ward"
+)
+unemployed <- na.omit(filter(gmppanel_prop,Classification=="Never worked & long-term unemployed"))
+unemployed <- unemployed %>% 
+  filter(!(Location %in% c("Tameside District","High Peak District")),Year>=1971) %>% 
+  mutate(treatment = factor(ifelse(Location %in%high_peak_areas, 1, 0)),
+         established = ifelse(Year>=2011,1,0),
+         did= established*treatment)
+library(rstanarm)
+library(marginaleffects)
+library(bayestestR)
+set.seed(123)
+spline_random <- stan_glmer(
+  Proportion ~ factor(treatment)*factor(Year)+(1 | Location),
+  data = unemployed,
+  family = gaussian(),cores=8,chains=8
+)
+grid = unemployed[,c(2,7)]
+grid$Year = as.factor(grid$Year)
+paths = predictions(spline_random,ndraws=4000,re.form=NA)
+pathpred = paths[,c(2,3,4,6,10)]
+pathpred = data.frame(pathpred)
+ggplot(pathpred, aes(x = Year, y = estimate, color = treatment, group = treatment)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 3) +
+  # Add Bayesian uncertainty ribbons
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = treatment), 
+              alpha = 0.15, color = NA) + scale_color_manual(
+                name = "Boundary Side", 
+                values = c("orange","darkgreen"), 
+                labels = c("Greater Manchester","High Peak") # <--- UPDATE THIS
+              ) +
+  scale_fill_manual(
+    name = "Boundary Side", 
+    values = c("orange","darkgreen"), 
+    labels = c("Greater Manchester","High Peak") # <--- MUST MATCH EXACTLY
+  ) +ggtitle(unique(unemployed$Classification))+labs(subtitle = "95 percent probability that the true value lies in shaded area(posterior interval)")
+describe_posterior(spline_random)
+```
+```{r}
+gmppanel <- read_csv("~/(No subject)/Courseworkstuff/New folder (2)/gmppanel.txt")
+gmppanel_prop1 <- gmppanel %>%
+  group_by(Location, Year) %>%
+  mutate(Proportion = Count / sum(Count, na.rm = TRUE)) %>%
+  ungroup()
+gmppanel_prop2 <- read_csv("C:/Users/alexa/Downloads/gmppanel_prop.csv")
+gmppanel_prop2=gmppanel_prop2[,-2]
+gmppanel_prop=full_join(gmppanel_prop1,gmppanel_prop2)
+high_peak_areas <- c(
+  "New Mills West Ward",
+  "New Mills East Ward",
+  "Buxton Central Ward",
+  "Dinting Ward",
+  "Old Glossop Ward",
+  "Hadfield South Ward",
+  "Hadfield North Ward"
+)
+unemployed <- na.omit(filter(gmppanel_prop,Classification=="Intermediate occupations"))
+unemployed <- unemployed %>% 
+  filter(!(Location %in% c("Tameside District","High Peak District")),Year>=1971) %>% 
+  mutate(treatment = factor(ifelse(Location %in%high_peak_areas, 1, 0)),
+         established = ifelse(Year>=2011,1,0),
+         did= established*treatment)
+library(rstanarm)
+library(marginaleffects)
+library(bayestestR)
+set.seed(123)
+spline_random <- stan_glmer(
+  Proportion ~ factor(treatment)*factor(Year)+(1 | Location),
+  data = unemployed,
+  family = gaussian(),cores=8,chains=8
+)
+grid = unemployed[,c(2,7)]
+grid$Year = as.factor(grid$Year)
+paths = predictions(spline_random,ndraws=4000,re.form=NA)
+pathpred = paths[,c(2,3,4,6,10)]
+pathpred = data.frame(pathpred)
+ggplot(pathpred, aes(x = Year, y = estimate, color = treatment, group = treatment)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 3) +
+  # Add Bayesian uncertainty ribbons
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = treatment), 
+              alpha = 0.15, color = NA) + scale_color_manual(
+                name = "Boundary Side", 
+                values = c("orange","darkgreen"), 
+                labels = c("Greater Manchester","High Peak") # <--- UPDATE THIS
+              ) +
+  scale_fill_manual(
+    name = "Boundary Side", 
+    values = c("orange","darkgreen"), 
+    labels = c("Greater Manchester","High Peak") # <--- MUST MATCH EXACTLY
+  ) +ggtitle(unique(unemployed$Classification))+labs(subtitle = "95 percent probability that the true value lies in shaded area(posterior interval)")
+describe_posterior(spline_random)
+```
+```{r}
+unemployed <- na.omit(filter(gmppanel_prop,Classification=="Higher managerial, administrative & professional occupations" ))
+unemployed <- unemployed %>% 
+  filter(Location != "Tameside District",Year>=1971) %>% 
+  mutate(treatment = factor(ifelse(Location == "High Peak District", 1, 0)),
+         established = ifelse(Year>=2011,1,0),
+         did= established*treatment)
+set.seed(123)
+spline_random <- stan_glmer(
+  Proportion ~ factor(treatment)*factor(Year)+(1 | Location),
+  data = unemployed,
+  family = gaussian(),cores=8,chains=8
+)
+grid = unemployed[,c(2,7)]
+grid$Year = as.factor(grid$Year)
+paths = predictions(spline_random,ndraws=4000,re.form=NA)
+pathpred = paths[,c(2,3,4,6,10)]
+pathpred = data.frame(pathpred)
+ggplot(pathpred, aes(x = Year, y = estimate, color = treatment, group = treatment)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 3) +
+  # Add Bayesian uncertainty ribbons
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = treatment), 
+              alpha = 0.15, color = NA) + scale_color_manual(
+                name = "Boundary Side", 
+                values = c("orange","darkgreen"), 
+                labels = c("Greater Manchester","High Peak") # <--- UPDATE THIS
+              ) +
+  scale_fill_manual(
+    name = "Boundary Side", 
+    values = c("orange","darkgreen"), 
+    labels = c("Greater Manchester","High Peak") # <--- MUST MATCH EXACTLY
+  ) +ggtitle(unique(unemployed$Classification))+labs(subtitle = "95 percent probability that the true value lies in shaded area(posterior interval)")
+describe_posterior(spline_random)
+```
+```{r}
+unemployed <- na.omit(filter(gmppanel_prop,Classification=="Routine & manual occupations" ))
+unemployed <- unemployed %>% 
+  filter(Location != "Tameside District",Year>=1971) %>% 
+  mutate(treatment = factor(ifelse(Location == "High Peak District", 1, 0)),
+         established = ifelse(Year>=2011,1,0),
+         did= established*treatment)
+set.seed(123)
+spline_random <- stan_glmer(
+  Proportion ~ factor(treatment)*factor(Year)+(1 | Location),
+  data = unemployed,
+  family = gaussian(),cores=8,chains=8
+)
+grid = unemployed[,c(2,7)]
+grid$Year = as.factor(grid$Year)
+paths = predictions(spline_random,ndraws=4000,re.form=NA)
+pathpred = paths[,c(2,3,4,6,10)]
+pathpred = data.frame(pathpred)
+ggplot(pathpred, aes(x = Year, y = estimate, color = treatment, group = treatment)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 3) +
+  # Add Bayesian uncertainty ribbons
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = treatment), 
+              alpha = 0.15, color = NA) + scale_color_manual(
+                name = "Boundary Side", 
+                values = c("orange","darkgreen"), 
+                labels = c("Greater Manchester","High Peak") # <--- UPDATE THIS
+              ) +
+  scale_fill_manual(
+    name = "Boundary Side", 
+    values = c("orange","darkgreen"), 
+    labels = c("Greater Manchester","High Peak") # <--- MUST MATCH EXACTLY
+  ) +ggtitle(unique(unemployed$Classification))+labs(subtitle = "95 percent probability that the true value lies in shaded area(posterior interval)")
+describe_posterior(spline_random)
+```
+
