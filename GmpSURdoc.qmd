@@ -1,0 +1,161 @@
+---
+title: "Border Discontinuity Part 2"
+format: html
+---
+
+Setting up the groups importing packages, and cleaning names
+
+```{r}
+set.seed(123)
+library(blavaan)
+library(tidyverse)
+library(readr)
+library(janitor)
+library(bayesplot)
+library(bayestestR)
+high_peak_areas <- c(
+  "New Mills West Ward",
+  "New Mills East Ward",
+  "Buxton Central Ward",
+  "Dinting Ward",
+  "Old Glossop Ward",
+  "Hadfield South Ward",
+  "Hadfield North Ward"
+)
+gmppanel_prop = read_csv("c:/Users/User/Downloads/gmppanel_prop.csv")
+widepanel <- pivot_wider(
+  gmppanel_prop,     
+  id_cols = c(Location, Year),     
+  names_from = Classification,     
+  values_from = Proportion,
+  values_fn = first 
+)
+widepanel = widepanel %>%  filter(Location != c("Tameside District","High Peak District"),Year>=1971) %>%
+  mutate(highpeak = ifelse(Location %in%high_peak_areas, 0, 1),
+         established = ifelse(Year>=2011,1,0),
+         gmp= established*highpeak)
+
+widepanel_clean = widepanel %>% clean_names()
+```
+
+Defining the pooled structural model with the SUR residual covariance and treatment coefficients note that the covariances absorb both between and within variation
+
+```{r}
+sur_model_clean <- '
+  # Outcome Regressions within towns
+  higher_managerial_administrative_professional_occupations ~ bhm*gmp + established+highpeak
+  intermediate_occupations                                 ~ bim*gmp +  established+highpeak
+  routine_manual_occupations                               ~ br*gmp + established+highpeak
+  
+  # SUR Residual  Covariances
+  higher_managerial_administrative_professional_occupations ~~ phim*intermediate_occupations
+  higher_managerial_administrative_professional_occupations ~~ phr*routine_manual_occupations
+  intermediate_occupations ~~ pimr*routine_manual_occupations
+  
+  
+  #defined parameters including implied effect on unemployment
+  gap_routine_manage := br-bhm
+  gap_manual_intermidiate := br-bim
+  gap_highm_intermidiate := bhm-bim
+  polarization := (bhm + br) - bim
+implied_ch_in_unemployment := -(bhm+bim+br)
+'
+priorbetas = dpriors(nu = "normal(0,10)",beta = "normal(0,0.5)")
+```
+
+Also define a prior for coefficients and intercept in general we use a loose normal(0,0.5) prior with 95 percent of expected parameter values representing proportion changes lying between +- 0.98.Now estimate the model by MCMC, using 8 chains/cores for speed
+
+```{r}
+fitbayes <- bsem(
+  sur_model_clean,
+  dp = priorbetas,
+  data     = widepanel_clean,
+  n.chains = 8,
+  cores = 8)
+```
+
+The pooling model uses both within and between variation for estimating coefficients which means it can be somewhat oblivious to the unique time invariant characteristics that each town on either side of the border might have historically which might get mixed up with the cross border effect. Therefore a two way within transformation is used where we first group by town and subtract out the means and then group by year and subtract out the means. This means that coefficients now represent the average of within town deviations from the mean associated with joining greater manchester effectively using each towns variation overtime as a control for itself. Subtracting out the year means similarly controls for any shocks hitting all towns at the same time
+
+```{r}
+widepanel_demeaned <- widepanel %>%
+clean_names() %>%
+group_by(location) %>%
+mutate(across(where(is.numeric), ~ .x - mean(.x, na.rm = TRUE))) %>%
+group_by(year) %>%
+mutate(across(where(is.numeric), ~ .x - mean(.x, na.rm = TRUE))) %>%
+ungroup()
+sur_model_within <- '
+  # Outcome Regressions within towns
+  higher_managerial_administrative_professional_occupations ~ bhm*gmp
+  intermediate_occupations                                 ~ bim*gmp
+  routine_manual_occupations                               ~ br*gmp
+  
+  # SUR Residual Covariances 
+  higher_managerial_administrative_professional_occupations ~~ phim*intermediate_occupations
+  higher_managerial_administrative_professional_occupations ~~ phr*routine_manual_occupations
+  intermediate_occupations ~~ pimr*routine_manual_occupations
+  
+  
+  #defined parameters including implied effect on unemployment
+  gap_routine_manage := br-bhm
+  gap_manual_intermidiate := br-bim
+  gap_highm_intermidiate := bhm-bim
+  polarization := (bhm + br) - bim
+implied_ch_in_unemployment := -(bhm+bim+br)'
+```
+
+We now estimate the within town fixed effects model unbiased by time invariant unobservables:
+
+```{r}
+fitbayeswithin <- bsem(
+  sur_model_within,
+  dp = priorbetas,
+  data     = widepanel_demeaned,
+  n.chains = 8,
+  cores    = 8
+)
+summary(fitbayeswithin)
+blavCompare(fitbayes,fitbayeswithin)
+```
+
+We can now visualise the results fully by plotting out the full posteriors for coefficient uncertainty and comparing priors with posteriors
+
+```{r}
+library(lavaanPlot)
+lavaanPlot2(fitbayeswithin,include = "covs")
+mcmc_areas_ridges(blavInspect(fitbayeswithin,what="draws"),pars = c("bhm","bim","br","implied_ch_in_unemployment"),prob = 0.95)+ 
+  xlim(c(-0.2, 0.2)) + 
+  ggtitle("Within Effects of joining gmp across sectors")
+mcmc_areas_ridges(blavInspect(fitbayeswithin,what="draws"),pars = c("phim","phr","pimr"),prob = 0.95)+ 
+  ggtitle("Within covariences of joining gmp across sectors")
+curve(dnorm(x,0.66,0.029),from=-1,to=1,col="red",main="   intermediate_occupations prior/posterior")
+curve(dnorm(x,0,0.5),from=-1,to=1,add=TRUE,col="darkblue")
+curve(dnorm(x,0.019,0.024),from=-1,to=1,col="red",main=" routine_manual_occupations prior/posterior")
+curve(dnorm(x,0,0.5),from=-1,to=1,add=TRUE,col="darkblue")
+curve(dnorm(x,-0.064,0.036),from=-1,to=1,col="red",main="higher_managerial_administrative prior/posterior")
+curve(dnorm(x,0,0.5),from=-1,to=1,add=TRUE,col="darkblue")
+```
+
+APPENDIX: Doing it the Classical way. Feel Free to use if don't want to use BAYES
+
+In finite n an alternative to exact inference via MCMC is too use MLE for estimates but bootstrap the standard errors to hopefully attain a simulated sampling distribution which can be close to an asymptotic one empirically. For this particular case the bootstrap attains fairly similar interval estimates compared to the exact bayesian method.
+
+```{r}
+library(lavaan)
+fitbootpooled = sem(
+  sur_model_clean,
+  data     = widepanel_clean,
+  ncpus    = 12,
+  se="bootstrap",
+  test = "bootstrap",bootstrap=4000,parallel="snow"
+)
+summary(fitbootpooled,ci=TRUE)
+fitboot = sem(
+  sur_model_within,
+  data     = widepanel_demeaned,
+  ncpus    = 12,
+  se="bootstrap",
+  test = "bootstrap",bootstrap=4000,parallel="snow"
+)
+summary(fitboot,ci=TRUE)
+```
